@@ -1,0 +1,26 @@
+.turnWrapper {
+  text-align: center;
+}
+
+.history {
+  color: white;
+}
+
+.list {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+}
+
+.hit {
+  color: green;
+}
+
+.miss {
+  color: red;
+}
+
+.myTurn {
+  background-color: #696900;
+}

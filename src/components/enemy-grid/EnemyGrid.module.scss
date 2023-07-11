@@ -1,0 +1,10 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(10, var(--ship-size));
+  grid-template-rows: repeat(10, var(--ship-size));
+  user-select: none;
+}
+
+.disabled {
+  pointer-events: none;
+}

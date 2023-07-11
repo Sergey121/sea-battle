@@ -1,0 +1,17 @@
+.page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.title {
+  color: white;
+  font-size: 72px;
+}
+
+.btns {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

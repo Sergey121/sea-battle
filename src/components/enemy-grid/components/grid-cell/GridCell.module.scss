@@ -1,0 +1,52 @@
+.cell {
+  outline: 1px solid #b0a8a8;
+  background-color: #d7d4d4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    scale: 1.1;
+  }
+}
+
+.shot {
+  pointer-events: none;
+
+  &:before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: #83aeef;
+  }
+
+  &:hover {
+    scale: none;
+    cursor: not-allowed;
+  }
+}
+
+.destroyedShip {
+  &:before {
+    content: none;
+  }
+
+  &:after {
+    content: 'X';
+    font-size: 32px;
+  }
+}
+
+.completelyDestroyed {
+  background: repeating-linear-gradient(
+                  45deg,
+                  #ff6969,
+                  #ff6969 10px,
+                  #f3a9a9 10px,
+                  #f3a9a9 20px
+  );;
+}

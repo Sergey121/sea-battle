@@ -1,0 +1,23 @@
+.ship {
+  display: flex;
+  flex-direction: row;
+  transition: all 0.3s;
+  cursor: grabbing;
+
+  > div {
+    width: calc(var(--ship-size));
+    height: calc(var(--ship-size));
+    background-color: #d3f3c8;
+    outline: 1px solid #ccc;
+  }
+
+  //&:hover {
+  //  scale: 1.2;
+  //}
+}
+
+.shipDragging {
+  > div {
+    background-color: #83aeef;
+  }
+}

@@ -1,0 +1,57 @@
+.cell {
+  outline: 1px solid #b0a8a8;
+  background-color: #d7d4d4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    scale: 1.1;
+  }
+}
+
+.availableForDrop {
+  background-color: #a6e5a6;
+}
+
+.cellHoveredWhileDragging {
+  background-color: #b0a8a8;
+}
+
+.notAvailableForDrop {
+  background-color: #f85b5b;
+}
+
+.hasShip {
+  background-color: #1c1c1c;
+}
+
+.shot {
+  pointer-events: none;
+  &:before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: #83aeef;
+  }
+
+  &:hover {
+    scale: none;
+    cursor: not-allowed;
+  }
+}
+
+.destroyedShip {
+  color: white;
+  &:before {
+    content: none;
+  }
+  &:after {
+    content: 'X';
+    font-size: 32px;
+  }
+}
