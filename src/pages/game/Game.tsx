@@ -4,7 +4,7 @@ import { enemyShipsAtom, Ships, shipsAtom } from '../../components/ships/Ships';
 import { PlayerBoard } from '../../components/player-board/PlayerBoard';
 import { useParams } from 'react-router-dom';
 import { useRoom } from '../../hooks/useRoom';
-import { atom, useSetAtom } from 'jotai';
+import { atom, useAtomValue, useSetAtom } from "jotai";
 import {
   GameHistory as GameHistoryType,
   Room,
@@ -18,7 +18,7 @@ import {
 import { gridAtom } from '../../components/grid/gridAtom';
 import { EnemyBoard } from '../../components/enemy-board/EnemyBoard';
 import { showError } from '../../utils/error';
-import { updateUserConnection } from '../../firebase';
+import { updateUserConnection, updateWinner } from "../../firebase";
 import { GameHistory } from '../../components/game-history/GameHistory';
 import { setIsHostAtom } from '../../hooks/useIsHost';
 import { useGameHistory } from '../../hooks/useGameHistory';
@@ -26,10 +26,14 @@ import { enemyGridAtom } from '../../components/enemy-grid/enemyGridAtom';
 
 const updateShipsAtom = atom(null, (get, set, isHost: boolean, room: Room) => {
   function updateShip(shipAtom: ShipAtom, index: number, ships: Ship[], fieldAtom: UserFieldAtom) {
-    set(shipAtom, ships[index]);
+    if (ships[index]) {
+      set(shipAtom, ships[index]);
+    }
 
     const ship = get(shipAtom);
     const grid = get(fieldAtom);
+
+    if (!ship) return;
 
     ship.coordinates.forEach(coords => {
       const [row, col] = coords.coordinate;
@@ -92,6 +96,14 @@ const updateShipByHistoryMoveAtom = atom(null, (get, set, isHost: boolean, histo
   });
 });
 
+const isAllShipsDestroyed = atom( (get) => {
+  const ships = get(shipsAtom);
+  if (ships.map(ship => get(ship).destroyed || false).every(b => b)) {
+    return true;
+  }
+  return false;
+})
+
 const getDescription = (room: Room) => {
   if (!room.player1?.connected || !room.player2?.connected) {
     return 'Waiting while player connected...';
@@ -116,6 +128,7 @@ export const Game = (props: Props) => {
   const updateShips = useSetAtom(updateShipsAtom);
   const updateShipsByHistory = useSetAtom(updateShipByHistoryMoveAtom);
   const setIsHost = useSetAtom(setIsHostAtom);
+  const isAllDestroyed = useAtomValue(isAllShipsDestroyed);
 
   useEffect(() => {
     setIsHost(isHost);
@@ -123,6 +136,19 @@ export const Game = (props: Props) => {
 
   const [room, { isLoading }] = useRoom(roomId!);
   const [gameHistory] = useGameHistory(roomId!);
+
+  useEffect(() => {
+    if (room && room.status !== RoomStatus.finished && isAllDestroyed) {
+      updateWinner(room.id, isHost ? WhichPlayer.player2 : WhichPlayer.player1);
+    }
+  }, [room, isAllDestroyed, isHost]);
+
+  const status = room?.status;
+  useEffect(() => {
+    if (status && status === RoomStatus.finished) {
+      alert(`Game finished! ${room.winner}`);
+    }
+  }, [status, room]);
 
   useEffect(() => {
     let disconnect: () => Promise<void> | null;

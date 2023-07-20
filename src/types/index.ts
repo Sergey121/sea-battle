@@ -59,6 +59,7 @@ export type Room = {
   status: RoomStatusType;
   player1: Player;
   player2?: Player;
+  winner?: WhichPlayerType;
 };
 
 export type HistoryMove = {

@@ -200,3 +200,18 @@ export const makeAShot = async (roomId: string, row: number, col: number, player
     throw unexpectedError();
   }
 };
+
+export const updateWinner = async (roomId: string, winner: WhichPlayerType) => {
+  try {
+    const docRef = doc(db, COLLECTIONS.rooms, roomId);
+    const data: Pick<Room, 'dateUpdate' | 'winner' | 'status'> = {
+      dateUpdate: Date.now(),
+      status: RoomStatus.finished,
+      winner,
+    }
+    await updateDoc(docRef, data);
+  } catch (e) {
+    console.debug(e);
+    throw unexpectedError();
+  }
+}
