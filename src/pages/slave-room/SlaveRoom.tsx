@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import styles from './SlaveRoom.module.scss';
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from 'react-router-dom';
 import { useRoom } from '../../hooks/useRoom';
-import { Button } from "../../components/button/Button";
-import { showError } from "../../utils/error";
-import { joinTheRoom } from "../../firebase";
+import { Button } from '../../components/button/Button';
+import { showError } from '../../utils/error';
+import { joinTheRoom } from '../../firebase';
+import { TextInput } from '../../components/text-input/TextInput';
 
 export const SlaveRoom = () => {
   const { id } = useParams<{ id: string }>();
@@ -24,7 +25,7 @@ export const SlaveRoom = () => {
       setLoading(false);
       showError(e);
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -41,8 +42,9 @@ export const SlaveRoom = () => {
   return (
     <div className={styles.page}>
       <h2 className={styles.title}>{room.player1.name} invited you. Please enter your name.</h2>
-      <input type="text" value={name} onChange={e => setName(e.target.value.trim())} />
+      <TextInput onChange={value => setName(value.trim())} value={name} />
+      <div className={styles.divider} />
       <Button disabled={name.length <= 0 || loading} label={'Next'} onClick={handleNext} />
     </div>
-  )
+  );
 };

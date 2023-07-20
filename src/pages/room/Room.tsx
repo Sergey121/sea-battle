@@ -4,6 +4,7 @@ import { Button } from '../../components/button/Button';
 import { useNavigate } from 'react-router-dom';
 import { createRoom } from '../../firebase';
 import { showError } from '../../utils/error';
+import { TextInput } from '../../components/text-input/TextInput';
 
 export const Room = () => {
   const navigate = useNavigate();
@@ -24,7 +25,8 @@ export const Room = () => {
   return (
     <div className={styles.page}>
       <h2 className={styles.title}>Enter your name</h2>
-      <input type="text" value={name} onChange={e => setName(e.target.value.trim())} />
+      <TextInput onChange={value => setName(value.trim())} value={name} />
+      <div className={styles.divider} />
       <Button disabled={name.length <= 0 || loading} label={'Next'} onClick={handleCreateRoom} />
     </div>
   );

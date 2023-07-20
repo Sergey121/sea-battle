@@ -1,6 +1,6 @@
 import { EnemyGrid } from '../enemy-grid/EnemtGrid';
 import React from 'react';
-import { Room, WhichPlayer } from '../../types';
+import { Room, RoomStatus, WhichPlayer } from "../../types";
 import styles from '../player-board/PlayerBoard.module.scss';
 import { makeAShot } from '../../firebase';
 import { useIsHost } from '../../hooks/useIsHost';
@@ -20,10 +20,12 @@ export const EnemyBoard = (props: Props) => {
   };
 
   const name = (isHost ? room.player2?.name : room.player1.name) || 'Opponent';
+  const isGame = room.status === RoomStatus.game;
+
   return (
     <div>
       <div className={styles.title}>{name}'s board</div>
-      <EnemyGrid disabled={!myTurn} onClick={handleClick} />
+      <EnemyGrid disabled={!myTurn || !isGame} onClick={handleClick} />
     </div>
   );
 };

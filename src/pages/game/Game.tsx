@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import styles from './Game.module.scss';
 import { enemyShipsAtom, Ships, shipsAtom } from '../../components/ships/Ships';
 import { PlayerBoard } from '../../components/player-board/PlayerBoard';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useRoom } from '../../hooks/useRoom';
-import { atom, useAtomValue, useSetAtom } from "jotai";
+import { atom, useAtomValue, useSetAtom } from 'jotai';
 import {
   GameHistory as GameHistoryType,
   Room,
@@ -18,7 +18,7 @@ import {
 import { gridAtom } from '../../components/grid/gridAtom';
 import { EnemyBoard } from '../../components/enemy-board/EnemyBoard';
 import { showError } from '../../utils/error';
-import { updateUserConnection, updateWinner } from "../../firebase";
+import { updateUserConnection, updateWinner } from '../../firebase';
 import { GameHistory } from '../../components/game-history/GameHistory';
 import { setIsHostAtom } from '../../hooks/useIsHost';
 import { useGameHistory } from '../../hooks/useGameHistory';
@@ -96,17 +96,18 @@ const updateShipByHistoryMoveAtom = atom(null, (get, set, isHost: boolean, histo
   });
 });
 
-const isAllShipsDestroyed = atom( (get) => {
+const isAllShipsDestroyed = atom(get => {
   const ships = get(shipsAtom);
   if (ships.map(ship => get(ship).destroyed || false).every(b => b)) {
     return true;
   }
   return false;
-})
+});
 
 const getDescription = (room: Room) => {
   if (!room.player1?.connected || !room.player2?.connected) {
-    return 'Waiting while player connected...';
+    const url = `${window.location.origin}/room/${room.id}/slave`;
+    return `Waiting while player connected... URL: ${url}`;
   }
   if (room.status === RoomStatus.initialization) {
     return 'Waiting while both players are ready.';
@@ -123,6 +124,9 @@ type Props = {
 
 export const Game = (props: Props) => {
   const { isHost } = props;
+
+  const navigate = useNavigate();
+
   const { id: roomId } = useParams<{ id: string }>();
 
   const updateShips = useSetAtom(updateShipsAtom);
@@ -136,6 +140,12 @@ export const Game = (props: Props) => {
 
   const [room, { isLoading }] = useRoom(roomId!);
   const [gameHistory] = useGameHistory(roomId!);
+
+  useEffect(() => {
+    if (!isHost && room && !room.player2?.name) {
+      navigate(`/room/${room.id}/slave/init`);
+    }
+  }, [room, isHost, navigate]);
 
   useEffect(() => {
     if (room && room.status !== RoomStatus.finished && isAllDestroyed) {
