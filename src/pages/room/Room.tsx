@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 import styles from './Room.module.scss';
 import { Button } from '../../components/button/Button';
 import { useNavigate } from 'react-router-dom';
-import { createRoom } from '../../firebase';
+import { createRoom, logViewPage } from "../../firebase";
 import { showError } from '../../utils/error';
 import { TextInput } from '../../components/text-input/TextInput';
 
@@ -10,6 +10,10 @@ export const Room = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    logViewPage('room_create');
+  }, [])
 
   const handleCreateRoom = async () => {
     try {

@@ -39,7 +39,7 @@ const COLLECTIONS = {
 const db = getFirestore(app);
 const analytics = getAnalytics(app);
 
-export const logViewPage = (id: string, page: string) => {
+export const logViewPage = (page: string, id?: string, ) => {
   logEvent(analytics, 'page_viewed', {
     name: page,
     item_id: id,

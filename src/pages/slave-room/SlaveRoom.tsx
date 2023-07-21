@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 import styles from './SlaveRoom.module.scss';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRoom } from '../../hooks/useRoom';
 import { Button } from '../../components/button/Button';
 import { showError } from '../../utils/error';
-import { joinTheRoom } from '../../firebase';
+import { joinTheRoom, logViewPage } from "../../firebase";
 import { TextInput } from '../../components/text-input/TextInput';
 
 export const SlaveRoom = () => {
@@ -15,6 +15,10 @@ export const SlaveRoom = () => {
 
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    logViewPage('room_slave');
+  }, [])
 
   const handleNext = async () => {
     try {

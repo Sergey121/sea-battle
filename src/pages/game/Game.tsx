@@ -139,7 +139,7 @@ export const Game = (props: Props) => {
   }, [isHost, setIsHost]);
 
   useEffect(() => {
-    logViewPage(roomId!, 'game');
+    logViewPage('game', roomId!);
   }, [roomId]);
 
   const [room, { isLoading }] = useRoom(roomId!);
