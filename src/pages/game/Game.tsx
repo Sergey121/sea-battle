@@ -18,7 +18,7 @@ import {
 import { gridAtom } from '../../components/grid/gridAtom';
 import { EnemyBoard } from '../../components/enemy-board/EnemyBoard';
 import { showError } from '../../utils/error';
-import { updateUserConnection, updateWinner } from '../../firebase';
+import { logViewPage, updateUserConnection, updateWinner } from "../../firebase";
 import { GameHistory } from '../../components/game-history/GameHistory';
 import { setIsHostAtom } from '../../hooks/useIsHost';
 import { useGameHistory } from '../../hooks/useGameHistory';
@@ -137,6 +137,10 @@ export const Game = (props: Props) => {
   useEffect(() => {
     setIsHost(isHost);
   }, [isHost, setIsHost]);
+
+  useEffect(() => {
+    logViewPage(roomId!, 'game');
+  }, [roomId]);
 
   const [room, { isLoading }] = useRoom(roomId!);
   const [gameHistory] = useGameHistory(roomId!);

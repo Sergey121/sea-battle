@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app';
+import { getAnalytics, logEvent } from 'firebase/analytics';
 import {
   getFirestore,
   collection,
@@ -36,6 +37,14 @@ const COLLECTIONS = {
 } as const;
 
 const db = getFirestore(app);
+const analytics = getAnalytics(app);
+
+export const logViewPage = (id: string, page: string) => {
+  logEvent(analytics, 'page_viewed', {
+    name: page,
+    item_id: id,
+  });
+}
 
 export const createRoom = async (playerName: string): Promise<Room> => {
   if (!playerName) {
@@ -56,6 +65,9 @@ export const createRoom = async (playerName: string): Promise<Room> => {
       turn: WhichPlayer.player1,
       date: Date.now(),
       moves: [],
+    });
+    logEvent(analytics, 'create_room', {
+      item_id: ref.id,
     });
     return {
       ...data,
