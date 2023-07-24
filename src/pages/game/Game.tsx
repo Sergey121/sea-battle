@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from "react";
 import styles from './Game.module.scss';
 import { enemyShipsAtom, Ships, shipsAtom } from '../../components/ships/Ships';
 import { PlayerBoard } from '../../components/player-board/PlayerBoard';
@@ -18,7 +18,7 @@ import {
 import { gridAtom } from '../../components/grid/gridAtom';
 import { EnemyBoard } from '../../components/enemy-board/EnemyBoard';
 import { showError } from '../../utils/error';
-import { logViewPage, updateUserConnection, updateWinner } from "../../firebase";
+import { logViewPage, updateUserConnection, updateWinner } from '../../firebase';
 import { GameHistory } from '../../components/game-history/GameHistory';
 import { setIsHostAtom } from '../../hooks/useIsHost';
 import { useGameHistory } from '../../hooks/useGameHistory';
@@ -196,6 +196,13 @@ export const Game = (props: Props) => {
     updateShipsByHistory(isHost, gameHistory);
   }, [isHost, gameHistory, updateShipsByHistory]);
 
+  const names = useMemo(() => {
+    return {
+      player1: room?.player1?.name || 'Player1',
+      player2: room?.player2?.name || 'Player2',
+    }
+  }, [room]);
+
   if (isLoading) {
     return (
       <div className={styles.loading}>
@@ -225,7 +232,15 @@ export const Game = (props: Props) => {
         <div className={styles.content}>
           <PlayerBoard room={room} />
         </div>
-        {room.status === RoomStatus.initialization ? <Ships /> : <GameHistory myTurn={isMyTurn} moves={moves} />}
+        {room.status === RoomStatus.initialization ? (
+          <Ships />
+        ) : (
+          <GameHistory
+            myTurn={isMyTurn}
+            moves={moves}
+            names={names}
+          />
+        )}
         <div className={styles.content}>
           <EnemyBoard myTurn={isMyTurn} room={room} />
         </div>

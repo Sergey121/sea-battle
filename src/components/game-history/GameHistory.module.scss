@@ -8,9 +8,18 @@
 
 .list {
   padding: 0;
+  font-size: 16px;
+}
+
+.listItem {
+  padding: 0;
   list-style: none;
   display: flex;
   justify-content: space-between;
+
+  > div {
+    padding-left: 4px;
+  }
 }
 
 .hit {
@@ -23,4 +32,11 @@
 
 .myTurn {
   background-color: #696900;
+}
+
+.name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
